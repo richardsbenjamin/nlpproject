@@ -39,4 +39,4 @@ register_chat_settings(app)
 redirect(app)
 
 if __name__ == "__main__":
-    app.run_server(debug=False)
+    app.run(debug=False)

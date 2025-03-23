@@ -5,6 +5,7 @@ from adversarial_prompting.utils.messaging import (
     print_message
 )
 from .machinelearning import get_model, get_vectoriser, classify_prompt
+from .dependecy import detect_illegal_activity
 
 class ChatClient:
     def __init__(self, api_key, model):
@@ -39,6 +40,9 @@ class ChatClient:
             self.treatment_method = self.prompting_method
         elif treatment_method == "machine learning":
             self.treatment_method = self.machine_learning_method
+        elif treatment_method == "dependency analysis":
+            print("Dependency method ACTIVATE")
+            self.treatment_method = self.dependecy_method
 
     def handle_negative_response(self):
         role_play_input = (
@@ -86,6 +90,16 @@ class ChatClient:
                 return "I cannot answer your question because it contains illegal activity."
             
         return summary_response
+    
+    def dependecy_method(self, summary_response: str):
+        user_messages = [dict_["content"] for dict_ in self.conversation_history if dict_["role"] == "user"]
+        for message in user_messages:
+            # Use the detect_illegal_activity function from the module
+            illegal_activity = detect_illegal_activity(message)
+            if illegal_activity["is_suspicious"]:
+                return "I cannot answer your question because it contains illegal activity."
+        return summary_response
+
         
     def reset(self):
         self.conversation_history = []
