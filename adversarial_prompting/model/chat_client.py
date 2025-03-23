@@ -4,10 +4,13 @@ from adversarial_prompting.utils.messaging import (
     is_negative_response,
     print_message
 )
+from .machinelearning import get_model, get_vectoriser, classify_prompt
 
 class ChatClient:
     def __init__(self, api_key, model):
         self.client = Mistral(api_key=api_key)
+        self.ml_model = get_model()
+        self.vectoriser = get_vectoriser()
         self.model = model
         self.worried_mum = False
         self.treatment_method = None
@@ -34,6 +37,8 @@ class ChatClient:
             self.treatment_method = None
         elif treatment_method == "prompting":
             self.treatment_method = self.prompting_method
+        elif treatment_method == "machine learning":
+            self.treatment_method = self.machine_learning_method
 
     def handle_negative_response(self):
         role_play_input = (
@@ -48,14 +53,14 @@ class ChatClient:
         )
         return self.add_and_get_response("user", summarize_input)
     
-    def process_respone(self, assistant_response: str):
+    def process_response(self, assistant_response: str):
         if self.worried_mum and is_negative_response(str(assistant_response)):
             user_question, assistant_response = self.handle_negative_response()
             summary_question, summary_response = self.summarize_response()
 
             if self.treatment_method is None:
                 return summary_response
-        
+            
             return self.treatment_method(summary_response)
         
         return assistant_response
@@ -70,7 +75,15 @@ class ChatClient:
         
         return summary_response
     
-    
-    
+    def machine_learning_method(self, summary_response: str):
+        user_messages = [dict_["content"] for dict_ in self.conversation_history if dict_["role"] == "user"]
+        is_unsafe_question = False
+        for message in user_messages:
+            is_unsafe_question = classify_prompt(self.vectoriser, self.ml_model, message)
+            if is_unsafe_question:
+                return "I cannot answer your question because it contains illegal activity."
+            
+        return summary_response
+        
     def reset(self):
         self.conversation_history = []

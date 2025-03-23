@@ -62,12 +62,9 @@ def register_chat_messages(app):
             return existing_messages, True, True
 
         _, assistant_response = client.add_and_get_response("user", last_user_message)
-        assistant_response = format_response(assistant_response)
-        system_response_div = create_assistant_message(assistant_response)
+        updated_messages = existing_messages[:-1]
 
-        updated_messages = existing_messages[:-1] #+ [system_response_div]
-
-        processed_response = client.process_respone(assistant_response)
+        processed_response = client.process_response(assistant_response)
         summary_div = create_assistant_message(
             format_response(processed_response)
         )
@@ -95,7 +92,7 @@ def register_chat_settings(app):
         Input("machine-learning-option", "n_clicks"),
         Input("dependency-analysis-option", "n_clicks")]
     )
-    def update_output(n1, n2, n3):
+    def update_output(n1, n2, n3, n4):
         if not callback_context.triggered:
             return "No Method"
         else:
