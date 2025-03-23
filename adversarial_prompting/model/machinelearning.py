@@ -11,7 +11,5 @@ def get_vectoriser():
 
 def classify_prompt(vectorizer, model, message):
     X_input = vectorizer.transform([message])
-    print('MODEL')
-    print(model)
     predictions = model.predict(X_input)
-    return predictions[0] > 0.5
+    return predictions[0] < 0.5

@@ -79,7 +79,9 @@ class ChatClient:
         user_messages = [dict_["content"] for dict_ in self.conversation_history if dict_["role"] == "user"]
         is_unsafe_question = False
         for message in user_messages:
+            print('USER MESSAGE', message)
             is_unsafe_question = classify_prompt(self.vectoriser, self.ml_model, message)
+            print('USER MESSAGE', is_unsafe_question)
             if is_unsafe_question:
                 return "I cannot answer your question because it contains illegal activity."
             
