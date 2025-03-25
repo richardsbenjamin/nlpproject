@@ -1,8 +1,12 @@
 import spacy
 import os
 
-# Load the SpaCy model
-nlp = spacy.load("en_core_web_lg")
+# Ensure the SpaCy model is installed
+try:
+    nlp = spacy.load("en_core_web_lg")
+except OSError:
+    os.system("python -m spacy download en_core_web_lg")
+    nlp = spacy.load("en_core_web_lg")
 
 # Load bad words from external file
 bad_words_file_path = os.path.join(os.path.dirname(__file__), "bad_word_bank.txt")
