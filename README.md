@@ -31,7 +31,7 @@ echo "API_KEY=your_mistral_api_key_here" > .env
 
 # 5. Run the Application
 # MacOS/Linux (Ubuntu)
-python main.py
+python python ui/app.py
 
 # Windows
 python main.py
