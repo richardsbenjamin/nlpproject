@@ -31,9 +31,9 @@ echo "API_KEY=your_mistral_api_key_here" > .env
 
 # 5. Run the Application
 # MacOS/Linux (Ubuntu)
-python python ui/app.py
+python ui/app.py
 
 # Windows
-python main.py
+python ui/app.py
 
 Note: Files inside the model directory may present issues depending on the root directory setup. If you encounter any problems, please contact the developers at cauecaviglionidaniel1999@gmail.com.
